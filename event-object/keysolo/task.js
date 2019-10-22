@@ -4,6 +4,10 @@ class Game {
     this.wordElement = container.querySelector('.word');
     this.winsElement = container.querySelector('.status__wins');
     this.lossElement = container.querySelector('.status__loss');
+    this.timerElement = container.querySelector('.status_timer');
+
+    this.lengthWords;
+    this.idTimer;
 
     this.reset();
 
@@ -17,6 +21,11 @@ class Game {
   }
 
   registerEvents() {
+  	document.addEventListener('keydown', (event) => {
+  		if (this.idTimer === undefined) this.startTimer();
+  		event.key == this.currentSymbol.textContent ? this.success() : this.fail();
+  	});
+
     /*
       TODO:
       Написать обработчик события, который откликается
@@ -24,6 +33,22 @@ class Game {
       В случае правильного ввода слова вызываем this.success()
       При неправильном вводе символа - this.fail();
      */
+  }
+
+  startTimer () {
+  	this.idTimer = setInterval(()=>{
+  		if (this.lengthWords < 0) {
+  			this.fail();
+  		} else {
+  			this.timerElement.textContent = this.lengthWords;
+  		}
+  		--this.lengthWords;
+  	}, 1000);
+  }
+
+  stopTimer () {
+  	clearInterval(this.idTimer);
+  	this.idTimer = undefined
   }
 
   success() {
@@ -34,6 +59,7 @@ class Game {
     }
 
     if (++this.winsElement.textContent === 10) {
+    	this.stopTimer();
       alert('Победа!');
       this.reset();
     }
@@ -42,6 +68,7 @@ class Game {
 
   fail() {
     if (++this.lossElement.textContent === 5) {
+      this.stopTimer();
       alert('Вы проиграли!');
       this.reset();
     }
@@ -74,6 +101,8 @@ class Game {
   }
 
   renderWord(word) {
+  	this.lengthWords = this.timerElement.textContent = word.length;
+
     const html = [...word]
       .map(
         (s, i) =>
