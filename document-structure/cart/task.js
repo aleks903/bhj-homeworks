@@ -2,13 +2,19 @@
 let elProductQuantityControl = document.querySelectorAll('.product__quantity-control');
 let elProductAdd = document.querySelectorAll('.product__add');
 let elCartStyle = document.querySelector('.cart').style;
+let objProduct = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-	for (let i = 0; i < localStorage.length; i++) {
-		let keyItem = localStorage.key(i);
-		let objProduct = JSON.parse(localStorage.getItem(keyItem));
-		addTask (objProduct.id, objProduct.quantity, objProduct.img);
+	objProduct = JSON.parse(localStorage.getItem('products'));
+
+	if(objProduct) {
+		for (let i = 0; i < objProduct.length; i++) {
+			addCart (objProduct[i].id, objProduct[i].quantity, objProduct[i].img);
+		}
+	} else {
+		objProduct = [];
 	}
+
 	cartIsEmpty();
 });
 
@@ -55,11 +61,11 @@ function addProduct (event) {
 	}
 
 	addLocalStorageProduct (idProduct, quantityProduct, imgProduct.src);
-	addTask (idProduct, quantityProduct, imgProduct.src);
+	addCart (idProduct, quantityProduct, imgProduct.src);
 	cartIsEmpty();
 }
 
-function addTask (id, quantity, img) {
+function addCart (id, quantity, img) {
 	let product = document.createElement('div');
 
 	product.className = 'cart__product';
@@ -81,18 +87,29 @@ function addTask (id, quantity, img) {
 
 function removeProduct(event) {
 	let cartProduct = event.target.closest('.cart__product');
-	localStorage.removeItem(cartProduct.dataset.id);
+
+	let indexProduct = objProduct.findIndex(element => element.id == cartProduct.dataset.id);
+	objProduct.splice(indexProduct,1);
+	localStorage.setItem('products', JSON.stringify(objProduct));
+
 	cartProduct.remove();
 	cartIsEmpty();
 }
 
 function addLocalStorageProduct (id, quantity, img) {
-	let objProduct = {
-		id,
-		quantity,
-		img
-	};
-	localStorage.setItem(`${id}`, JSON.stringify(objProduct));
+	let indexProduct = objProduct.findIndex(element => element.id == id);
+
+	if (indexProduct >= 0) {
+		objProduct[indexProduct].quantity = quantity;
+	} else {
+		objProduct.push({
+			id,
+			quantity,
+			img
+		});
+	}
+	
+	localStorage.setItem('products', JSON.stringify(objProduct));
 }
 
 function cartIsEmpty () {

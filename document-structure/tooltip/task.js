@@ -5,21 +5,29 @@ let elTooltip = document.querySelector('.tooltip');
 
 for (let i = 0; i < elHasTooltip.length; i++) {
 	elHasTooltip[i].addEventListener('click', event => {
-if (document.querySelector('.tooltip_active')) {
-	document.querySelector('.tooltip_active').classList.remove('tooltip_active');
-}
+		if (elTooltip.textContent == event.target.title) {
 
-elTooltip.classList.add('tooltip_active');
-elTooltip.textContent = event.target.title;
-
-let coordinat = getCoordinate(event.target);
-
-elTooltip.style.position = 'absolute';
-elTooltip.style.top = coordinat.top +'px';
-elTooltip.style.left = coordinat.left + 'px';
-
+			if (!elTooltip.classList.contains('tooltip_active')) {
+				tooltipActive(event);
+			} else {
+				elTooltip.classList.remove('tooltip_active');
+			}
+		} else {
+			elTooltip.classList.remove('tooltip_active');
+			tooltipActive(event);
+		}
 		event.preventDefault();
 	});
+}
+
+function tooltipActive(event) {
+	elTooltip.classList.add('tooltip_active');
+	elTooltip.textContent = event.target.title;
+
+	let coordinat = getCoordinate(event.target);
+	elTooltip.style.position = 'absolute';
+	elTooltip.style.top = coordinat.top +'px';
+	elTooltip.style.left = coordinat.left + 'px';
 }
 
 function getCoordinate (elem) {
