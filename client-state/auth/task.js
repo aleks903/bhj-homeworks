@@ -45,9 +45,9 @@ document.forms['signin__form'].addEventListener('submit', event => {
 
 				let dataLogId = JSON.stringify({login: elLogin.value, id: data.user_id});
 				localStorage.setItem('lsAuth', dataLogId);
+				clearInput();
 			} else {
 				alert('Неверный логин/пароль');
-				clearInput();
 			}
 		}
 	});

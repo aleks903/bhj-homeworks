@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-elEditor.addEventListener('blur', function() {
+elEditor.addEventListener('keydown', function() {
 	localStorage.setItem('textEditor', elEditor.value);
 });
 
