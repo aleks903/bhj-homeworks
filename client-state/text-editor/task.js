@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-elEditor.addEventListener('keydown', function() {
+elEditor.addEventListener('keyup', function() {
 	localStorage.setItem('textEditor', elEditor.value);
 });
 
